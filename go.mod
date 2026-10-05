@@ -5,7 +5,7 @@ go 1.27.1
 require (
 	github.com/benpate/derp v0.44.0
 	github.com/benpate/digit v0.16.0
-	github.com/benpate/hannibal v0.41.0
+	github.com/benpate/hannibal v0.42.0
 	github.com/benpate/oembed v0.4.0
 	github.com/benpate/remote v0.25.0
 	github.com/benpate/rosetta v0.43.0

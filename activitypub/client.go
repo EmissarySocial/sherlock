@@ -19,13 +19,15 @@ type Client struct {
 	rootClient      streams.Client
 	userAgent       string
 	allowPrivateIPs bool
+	maxResponseSize int64
 }
 
 // New returns a fully initialized Client
 func New(options ...ClientOption) streams.Client {
 
 	result := Client{
-		userAgent: "Sherlock (https://github.com/benpate/sherlock)",
+		userAgent:       "Sherlock (https://github.com/benpate/sherlock)",
+		maxResponseSize: streams.MaxResponseSize,
 	}
 
 	for _, option := range options {

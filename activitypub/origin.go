@@ -44,10 +44,13 @@ func (client *Client) fetch(url string, options []any) (fetchResponse, error) {
 		remoteOptions = append(remoteOptions, authorizedFetch)
 	}
 
+	// Options run when the request is sent, after MaxResponseSize, so a caller can still
+	// raise the cap for a document it knows to be larger
 	txn := remote.Get(url).
 		Accept(vocab.ContentTypeActivityPub).
 		UserAgent(client.userAgent).
 		AllowPrivateIPs(client.allowPrivateIPs).
+		MaxResponseSize(client.maxResponseSize).
 		With(remoteOptions...).
 		Result(&body)
 

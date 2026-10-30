@@ -57,6 +57,7 @@ func TestLoad_WithMaxResponseSize(t *testing.T) {
 	require.Error(t, err)
 }
 
+<<<<<<< HEAD
 // TestLoad_WithMaxResponseSize_ZeroKeepsDefault confirms a zero never reaches remote, which would read up to 1GB
 func TestLoad_WithMaxResponseSize_ZeroKeepsDefault(t *testing.T) {
 
@@ -64,4 +65,35 @@ func TestLoad_WithMaxResponseSize_ZeroKeepsDefault(t *testing.T) {
 	_, err := New(WithAllowPrivateIPs(true), WithMaxResponseSize(0)).Load(server.URL)
 
 	require.Error(t, err)
+=======
+// TestLoad_WithMaxResponseSize_ZeroUsesRemoteDefault confirms a zero or negative cap reads past
+// streams.MaxResponseSize, under remote's 1 GB default
+func TestLoad_WithMaxResponseSize_ZeroUsesRemoteDefault(t *testing.T) {
+
+	server := servePaddedActor(t, streams.MaxResponseSize+1)
+
+	for _, value := range []int64{0, -1} {
+		document, err := New(WithAllowPrivateIPs(true), WithMaxResponseSize(value)).Load(server.URL)
+		require.NoError(t, err, "WithMaxResponseSize(%d)", value)
+		require.Equal(t, server.URL+"/", document.ID(), "WithMaxResponseSize(%d)", value)
+	}
+}
+
+// servePaddedActor starts a server whose actor, identified by its own URL, encodes to the requested number of bytes
+func servePaddedActor(t *testing.T, size int) *httptest.Server {
+
+	t.Helper()
+
+	var server *httptest.Server
+
+	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		prefix := `{"id":"` + server.URL + `/","type":"Person","summary":"`
+		suffix := `"}`
+		w.Header().Set("Content-Type", vocab.ContentTypeActivityPub)
+		_, _ = w.Write([]byte(prefix + strings.Repeat("a", size-len(prefix)-len(suffix)) + suffix))
+	}))
+
+	t.Cleanup(server.Close)
+	return server
+>>>>>>> dev-Charles
 }

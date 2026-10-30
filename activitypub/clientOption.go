@@ -46,8 +46,7 @@ func WithAllowPrivateIPs(allow bool) ClientOption {
 func WithMaxResponseSize(bytes int64) ClientOption {
 	return func(client *Client) {
 
-		// RULE: Negative values are treated as Zero/No limit,
-		// which uses the default 1GB limit from Remote.
+		// RULE: A value below one becomes zero, which remote reads as its own 1 GB default
 		if bytes < 1 {
 			bytes = 0
 		}

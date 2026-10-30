@@ -3,16 +3,16 @@ module github.com/benpate/sherlock
 go 1.27.3
 
 require (
-	github.com/benpate/derp v0.48.0
+	github.com/benpate/derp v0.49.0
 	github.com/benpate/digit v0.17.0
-	github.com/benpate/hannibal v0.46.0
+	github.com/benpate/hannibal v0.47.0
 	github.com/benpate/oembed v0.5.0
-	github.com/benpate/remote v0.26.0
+	github.com/benpate/remote v0.27.0
 	github.com/benpate/rosetta v0.46.0
 	github.com/benpate/uri v0.10.0
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.12.1
-	golang.org/x/net v0.61.0
+	golang.org/x/net v0.62.0
 )
 
 require (

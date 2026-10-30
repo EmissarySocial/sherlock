@@ -19,6 +19,7 @@ type Client struct {
 	rootClient      streams.Client
 	userAgent       string
 	allowPrivateIPs bool
+	maxResponseSize int64
 }
 
 // New returns a fully initialized Client

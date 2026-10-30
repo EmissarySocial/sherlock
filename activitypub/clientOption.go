@@ -40,3 +40,17 @@ func WithAllowPrivateIPs(allow bool) ClientOption {
 		client.allowPrivateIPs = allow
 	}
 }
+
+// WithMaxResponseSize is an Option that sets the largest response, in bytes, that a Client reads.
+// A value below one uses remote's 1 GB default instead of streams.MaxResponseSize.
+func WithMaxResponseSize(bytes int64) ClientOption {
+	return func(client *Client) {
+
+		// RULE: A value below one becomes zero, which remote reads as its own 1 GB default
+		if bytes < 1 {
+			bytes = 0
+		}
+
+		client.maxResponseSize = bytes
+	}
+}

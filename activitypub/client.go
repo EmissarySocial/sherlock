@@ -26,8 +26,7 @@ type Client struct {
 func New(options ...ClientOption) streams.Client {
 
 	result := Client{
-		userAgent:       "Sherlock (https://github.com/benpate/sherlock)",
-		maxResponseSize: streams.MaxResponseSize,
+		userAgent: "Sherlock (https://github.com/benpate/sherlock)",
 	}
 
 	for _, option := range options {

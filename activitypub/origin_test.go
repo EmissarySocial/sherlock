@@ -2,6 +2,7 @@ package activitypub
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -219,6 +220,24 @@ func TestTrusted_ConfirmationCarriesCallerOptions(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Equal(t, "reached", server.header("/actor", "X-Sherlock-Test"))
+}
+
+// TestResponseSizeLimit confirms that a configured size below one keeps streams.MaxResponseSize,
+// and that any other size is used as given.
+func TestResponseSizeLimit(t *testing.T) {
+
+	check := func(configured int64, expected int64) {
+		t.Helper()
+		client := Client{maxResponseSize: configured}
+		require.Equal(t, expected, client.responseSizeLimit(), "maxResponseSize %d", configured)
+	}
+
+	check(math.MinInt64, streams.MaxResponseSize)
+	check(-1, streams.MaxResponseSize)
+	check(0, streams.MaxResponseSize)
+	check(1, 1)
+	check(2048, 2048)
+	check(math.MaxInt64, math.MaxInt64)
 }
 
 // TestFinalURL_NoResponse confirms that a transaction with no response reports the requested URL.

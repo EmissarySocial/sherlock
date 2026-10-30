@@ -12,6 +12,6 @@ A [Sherlock](../README.md) client middleware that loads ActivityPub/ActivityStre
 
 - **`Delete`/`Save`/`SetRootClient` are inner-client pass-throughs, and `Delete`/`Save` are nil-safe.** With no inner client they are silent no-ops; `SetRootClient` only records the root when an inner client exists. Don't "simplify" these into unconditional dereferences — the nil guard is important for a top-of-stack client.
 
-- **A response is read up to `streams.MaxResponseSize`, 1 MB, and refused past it.** `WithMaxResponseSize` changes the cap for one Client, and a per-call `remote.Option` can raise it for one load.
+- **A response is read up to `streams.MaxResponseSize`, 1 MB, and refused past it.** `WithMaxResponseSize` changes the cap for one Client, and a value below one keeps 1 MB. A per-call `remote.Option` can raise it for one load.
 
 - **Authorized Fetch is opt-in via `WithKeyPairFunc`.** When set, requests are HTTP-signed (the key pair is resolved lazily, per request). The SSRF protections from [remote](https://github.com/benpate/remote) still apply regardless — signing modifies the request, it does not bypass the transport-level IP guard.

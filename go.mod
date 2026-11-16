@@ -1,14 +1,14 @@
 module github.com/benpate/sherlock
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/benpate/derp v0.49.0
 	github.com/benpate/digit v0.17.0
 	github.com/benpate/hannibal v0.47.0
 	github.com/benpate/oembed v0.5.0
-	github.com/benpate/remote v0.27.0
-	github.com/benpate/rosetta v0.46.0
+	github.com/benpate/remote v0.28.0
+	github.com/benpate/rosetta v0.49.0
 	github.com/benpate/uri v0.10.0
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.12.1
@@ -23,7 +23,7 @@ require (
 	github.com/mattn/go-colorable v0.1.16 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27 // indirect
-	go.yaml.in/yaml/v3 v3.0.5 // indirect
+	go.yaml.in/yaml/v3 v3.0.6 // indirect
 	golang.org/x/sys v0.49.0 // indirect
-	golang.org/x/text v0.43.0 // indirect
+	golang.org/x/text v0.44.0 // indirect
 )

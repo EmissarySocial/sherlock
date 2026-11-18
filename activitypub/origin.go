@@ -44,10 +44,13 @@ func (client *Client) fetch(url string, options []any) (fetchResponse, error) {
 		remoteOptions = append(remoteOptions, authorizedFetch)
 	}
 
+	// Options run when the request is sent, after MaxResponseSize, so a caller can still
+	// raise the cap for a document it knows to be larger
 	txn := remote.Get(url).
 		Accept(vocab.ContentTypeActivityPub).
 		UserAgent(client.userAgent).
 		AllowPrivateIPs(client.allowPrivateIPs).
+		MaxResponseSize(client.responseSizeLimit()).
 		With(remoteOptions...).
 		Result(&body)
 
@@ -114,6 +117,17 @@ func (client *Client) trustedDocument(url string, response fetchResponse, option
 
 	// The id's own host has spoken, so its copy is the one we keep
 	return client.newDocument(confirmation), nil
+}
+
+// responseSizeLimit returns the largest response, in bytes, that this Client reads.
+func (client *Client) responseSizeLimit() int64 {
+
+	// RULE: If the MaxResponseSize is not set (or negative) then use the ActivityStreams default (1MB)
+	if client.maxResponseSize < 1 {
+		return streams.MaxResponseSize
+	}
+
+	return client.maxResponseSize
 }
 
 // rejected returns the empty document that accompanies a rejection, carrying the response headers.

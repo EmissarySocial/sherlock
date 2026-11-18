@@ -1,9 +1,9 @@
 module github.com/benpate/sherlock
 
-go 1.27.3
+go 1.27.4
 
 require (
-	github.com/benpate/derp v0.48.0
+	github.com/benpate/derp v0.50.0
 	github.com/benpate/digit v0.17.0
 	github.com/benpate/hannibal v0.46.0
 	github.com/benpate/oembed v0.5.0

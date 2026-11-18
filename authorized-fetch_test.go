@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/benpate/remote"
@@ -37,9 +38,30 @@ func TestAuthorizedFetch_Valid(t *testing.T) {
 	require.Nil(t, err)
 
 	txn := remote.Get("https://example.com/inbox")
-	response := option.ModifyRequest(txn, request)
+	response, err := option.ModifyRequest(txn, request)
+	require.Nil(t, err)
 	require.Nil(t, response)
 
 	// A Signature header should have been added to the outbound request.
 	require.NotEmpty(t, request.Header.Get("Signature"))
+}
+
+// TestAuthorizedFetch_CannotSign verifies that a request is refused, and never sent, when its key cannot sign it
+func TestAuthorizedFetch_CannotSign(t *testing.T) {
+
+	received := 0
+
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		received++
+		writer.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	// A string is not a key that hannibal can sign with
+	option := AuthorizedFetch("https://example.com/actor#key", "not a key")
+
+	err := remote.Get(server.URL).AllowPrivateIPs(true).With(option).Send()
+
+	require.Error(t, err)
+	require.Zero(t, received)
 }

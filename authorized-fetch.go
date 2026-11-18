@@ -30,7 +30,8 @@ func AuthorizedFetch(publicKeyID string, privateKey crypto.PrivateKey) remote.Op
 		// remote server. It can be used to modify the request, or to replace it entirely.
 		// If it returns a non-nil http.Response, then that is used INSTEAD OF calling the remote server.
 		// If it returns a nil http.Response, then the request is sent to the remote server as normal.
-		ModifyRequest: func(t *remote.Transaction, request *http.Request) *http.Response {
+		// If it returns an error, then the request is never sent.
+		ModifyRequest: func(t *remote.Transaction, request *http.Request) (*http.Response, error) {
 
 			signer := sigs.NewSigner(
 				publicKeyID,
@@ -38,11 +39,12 @@ func AuthorizedFetch(publicKeyID string, privateKey crypto.PrivateKey) remote.Op
 				sigs.SignerFields("(request-target)", "host", "date"),
 			)
 
+			// RULE: A request that cannot be signed is never sent
 			if err := signer.Sign(request); err != nil {
-				derp.Report(derp.Wrap(err, "sherlock.AuthorizedFetch", "Error signing request"))
+				return nil, derp.Wrap(err, "sherlock.AuthorizedFetch", "Request refused, because it cannot be signed", "keyID: "+publicKeyID)
 			}
 
-			return nil
+			return nil, nil
 		},
 	}
 }
